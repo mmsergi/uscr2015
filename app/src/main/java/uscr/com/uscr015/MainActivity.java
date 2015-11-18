@@ -27,11 +27,17 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +53,6 @@ public class MainActivity extends Activity implements OnClickListener{
 
         fetch= (Button) findViewById(R.id.fetch);
         text = (TextView) findViewById(R.id.text);
-        et = (EditText) findViewById(R.id.et);
 
         fetch.setOnClickListener(this);
     }
@@ -114,29 +119,65 @@ public class MainActivity extends Activity implements OnClickListener{
             // ambil data dari Json database
             try {
                 JSONArray Jarray = new JSONArray(result);
-                for(int i=0;i<Jarray.length();i++)
+
+                for(int i=0;i<9;i++)
                 {
                     JSONObject Jasonobject = null;
-                    //text_1 = (TextView)findViewById(R.id.txt1);
+
                     Jasonobject = Jarray.getJSONObject(i);
+
 
                     //get an output on the screen
                     //String id = Jasonobject.getString("id");
                     String name = Jasonobject.getString("id");
                     String db_detail="";
 
-                    if(et.getText().toString().equalsIgnoreCase(name)) {
-                        db_detail = Jasonobject.getString("url");
-                        text.setText(db_detail);
-                        ImageView bindImage = (ImageView)findViewById(R.id.imageView);
-                        String pathToFile = db_detail;
-                        DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(bindImage);
-                        downloadTask.execute(pathToFile);
-                        break;
-                    }
-                    //text_1.append(id+"\t\t"+name+"\t\t"+password+"\t\t"+"\n");
+
+                    db_detail = Jasonobject.getString("url");
+
+                    View img = new ImageView(getBaseContext());
+                    ImageView bindImage;
+                    bindImage = new ImageView(img.getContext());
+
+                    LinearLayout ll = (LinearLayout)findViewById(R.id.LinearLayout1);
+
+                    ll.addView(bindImage);
+
+                    View layout = new LinearLayout(getBaseContext());
+                    LinearLayout nll;
+                    nll = new LinearLayout(layout.getContext());
+                    nll.setMinimumHeight(120);
+
+                    ll.addView(nll);
+
+                    View button = new ImageButton(getBaseContext());
+                    ImageButton btn = new ImageButton(button.getContext());
+                    btn.setImageResource(R.drawable.up_vote);
+
+                    btn.setBackgroundColor(0x00000000);
+                    //btn.setScaleX(0.2f);
+                    //btn.setScaleY(0.2f);
+
+                    nll.addView(btn);
+
+                    View button2 = new ImageButton(getBaseContext());
+                    ImageButton btn2 = new ImageButton(button2.getContext());
+                    btn2.setImageResource(R.drawable.down_vote);
+
+                    btn2.setBackgroundColor(0x00000000);
+
+
+                    nll.addView(btn2);
+                    //btn2.setScaleX(0.2f);
+                    //btn2.setScaleY(0.2f);
+                    //btn2.setLayoutParams(new LinearLayout.LayoutParams(150, 150));
+
+                    String pathToFile = db_detail;
+                    DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(bindImage);
+                    downloadTask.execute(pathToFile);
 
                 }
+
                 this.progressDialog.dismiss();
 
             } catch (Exception e) {
@@ -174,8 +215,18 @@ public class MainActivity extends Activity implements OnClickListener{
             }
             return bitmap;
         }
+
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
+
+            Display display = getWindowManager().getDefaultDisplay();
+            int width = display.getWidth(); // ((display.getWidth()*20)/100)
+            int height = result.getHeight();// ((display.getHeight()*30)/100)
+
+            //LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
+            //bmImage.setLayoutParams(parms);
+            bmImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            bmImage.setAdjustViewBounds(true);
         }
     }
 }
