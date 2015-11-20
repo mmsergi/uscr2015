@@ -75,26 +75,31 @@ public class MainActivity extends Activity {
         String url = null;
         int points = 0;
         Token ficha = new Token(this);
-        int lengthDB = jsonArray.length();
+        //int lengthDB = jsonArray.length();
         for (int i=0; i<5; i++){
             JSONObject json = null;
             try {
-                json = jsonArray.getJSONObject(lengthDB - i);
+                json = jsonArray.getJSONObject(i);
                 id = json.getInt("id");
                 url = json.getString("url");
                 points = json.getInt("points");
 
-                ficha.data_Token(id, url, points,"title");
+                ficha.data_Token(id, url, points, "title");
+
                 ficha.display_Token();
 
-                Log.e("ddddd", "hjgkg");
+
                 //createTOKEN(id, url, points, "title");
 
             } catch (JSONException e){
                 e.printStackTrace();
             }
         }
+
+
     }
+
+
 
     private class GetAllTokensTask extends AsyncTask<ApiConnector, Long, JSONArray>
     {
@@ -249,7 +254,7 @@ public class MainActivity extends Activity {
     }
 
 
-    private class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
+    public class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
         public DownloadImageWithURLTask(ImageView bmImage) {
             this.bmImage = bmImage;
