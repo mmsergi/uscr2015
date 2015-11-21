@@ -39,6 +39,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+    private JSONObject jsonObject;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +60,15 @@ public class MainActivity extends Activity {
         Token ficha = new Token(this);
         //int lengthDB = jsonArray.length();
         for (int i=0; i<10; i++){
-            JSONObject json = null;
+            jsonObject = null;
+
             try {
-                json = jsonArray.getJSONObject(i);
-                id = json.getInt("id");
-                title = "Title";
-                url = json.getString("url");
-                points = json.getInt("points");
+                jsonObject = jsonArray.getJSONObject(i);
+                id = jsonObject.getInt("id");
+                title = jsonObject.getString("title");
+                Log.e("ERROR",jsonObject.getString("title"));
+                url = jsonObject.getString("url");
+                points = jsonObject.getInt("points");
 
                 ficha.data_Token(id, url, points, title);
 
@@ -94,7 +98,11 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
-            createTokens(jsonArray);
+            if(jsonArray.isNull(0)){
+                Log.e("ERROR","JSON ARRAY no tiene contenido.");
+            } else {
+                createTokens(jsonArray);
+            }
         }
     }
 
