@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Display;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -29,12 +32,14 @@ public class Token {
     private String title;
     private TextView title_text;
 
+    private LinearLayout header;
     private ImageView img;
-    private LinearLayout footer;
+    private RelativeLayout footer;
     private ImageButton btn_UP;
     private ImageButton btn_DOWN;
     private ImageButton btn_SHARE;
     private ImageButton btn_FAV;
+    private ImageView divider;
 
     public Activity main_activity;
 
@@ -62,18 +67,87 @@ public class Token {
 
         LinearLayout mainLayout = (LinearLayout)this.main_activity.findViewById(R.id.MainLayout);
 
+        View header_olla = new RelativeLayout(this.main_activity.getBaseContext());
+        header = new LinearLayout(header_olla.getContext());
+        //header.setMinimumHeight(120);
+        mainLayout.addView(header);
+
+        View title_text_olla = new TextView(this.main_activity.getBaseContext());
+        TextView title_text = new TextView(title_text_olla.getContext());
+        title_text.setText(title);
+        title_text.setTextColor(Color.parseColor("#B40404"));
+        header.addView(title_text);
+
         View img_olla = new ImageView(this.main_activity.getBaseContext());
         this.img = new ImageView(img_olla.getContext());
-        this.img.setImageResource(R.drawable.up_vote);
-
-        Log.e("urL:", this.url);
-
+        this.img.setImageResource(R.drawable.download);
         DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(this.img);
-
         downloadTask.execute(this.url);
-
         mainLayout.addView(this.img);
 
+        View footer_olla = new RelativeLayout(this.main_activity.getBaseContext());
+        footer = new RelativeLayout(footer_olla.getContext());
+        footer.setMinimumHeight(120);
+        mainLayout.addView(footer);
+
+        footer.setPadding(20, 0, 40, 0);
+
+        View points_text_olla = new TextView(this.main_activity.getBaseContext());
+        TextView points_text = new TextView(points_text_olla.getContext());
+        points_text.setText(Integer.toString(points));
+        points_text.setTextColor(Color.parseColor("#B40404"));
+        footer.addView(points_text);
+
+        View btn_UP_olla = new ImageButton(this.main_activity.getBaseContext());
+        ImageButton btn_UP = new ImageButton(btn_UP_olla.getContext());
+        btn_UP.setImageResource(R.drawable.up_vote);
+        btn_UP.setBackgroundColor(0x00000000);
+        footer.addView(btn_UP);
+
+        btn_UP.setId(id);
+
+        View btn_DOWN_olla = new ImageButton(this.main_activity.getBaseContext());
+        ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
+        btn_DOWN.setImageResource(R.drawable.down_vote);
+        btn_DOWN.setBackgroundColor(0x00000000);
+        footer.addView(btn_DOWN);
+
+        RelativeLayout.LayoutParams params_btn_DOWN = (RelativeLayout.LayoutParams)btn_DOWN.getLayoutParams();
+        //params.addRule(RelativeLayout.BELOW, id);
+        params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
+        btn_DOWN.setLayoutParams(params_btn_DOWN);
+
+        View btn_FAV_olla = new ImageButton(this.main_activity.getBaseContext());
+        ImageButton btn_FAV = new ImageButton(btn_FAV_olla.getContext());
+        btn_FAV.setImageResource(R.drawable.fav);
+        btn_FAV.setBackgroundColor(0x00000000);
+        footer.addView(btn_FAV);
+
+        RelativeLayout.LayoutParams params_btn_FAV = (RelativeLayout.LayoutParams)btn_FAV.getLayoutParams();
+        //params_btn_FAV.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params_btn_FAV.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        btn_FAV.setLayoutParams(params_btn_FAV);
+
+        View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
+        ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
+        btn_SHARE.setImageResource(R.drawable.share);
+        btn_SHARE.setBackgroundColor(0x00000000);
+        footer.addView(btn_SHARE);
+
+        RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams)btn_SHARE.getLayoutParams();
+        params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
+        btn_SHARE.setLayoutParams(params_btn_SHARE);
+
+        View divider_olla = new ImageView(this.main_activity.getBaseContext());
+        ImageView divider = new ImageView(divider_olla.getContext());
+        divider.setImageResource(R.drawable.divider);
+
+        mainLayout.addView(divider);
+
+        /*RelativeLayout.LayoutParams params_DIVIDER = (RelativeLayout.LayoutParams)divider.getLayoutParams();
+        params_DIVIDER.addRule(RelativeLayout.BELOW);
+        divider.setLayoutParams(params_DIVIDER);*/
     }
 
     public class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
