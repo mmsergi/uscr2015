@@ -44,6 +44,8 @@ public class Token {
 
     public Activity main_activity;
 
+    private int counter = 0;
+
     public Token(MainActivity mainActivity) {
 
         this.id = 0;
@@ -51,8 +53,6 @@ public class Token {
         this.points = 0;
         this.title = null;
         this.main_activity = mainActivity;
-
-
 
         //return new Token();
     }
@@ -68,31 +68,33 @@ public class Token {
 
         LinearLayout mainLayout = (LinearLayout)this.main_activity.findViewById(R.id.MainLayout);
 
-        View header_olla = new RelativeLayout(this.main_activity.getBaseContext());
-        header = new LinearLayout(header_olla.getContext());
+        View header_aux = new RelativeLayout(this.main_activity.getBaseContext());
+        header = new LinearLayout(header_aux.getContext());
         //header.setMinimumHeight(120);
         mainLayout.addView(header);
 
-        View title_text_olla = new TextView(this.main_activity.getBaseContext());
-        TextView title_text = new TextView(title_text_olla.getContext());
+        View title_text_aux = new TextView(this.main_activity.getBaseContext());
+        TextView title_text = new TextView(title_text_aux.getContext());
         title_text.setText(title);
         title_text.setTextColor(Color.parseColor("#B40404"));
         header.addView(title_text);
 
-        View img_olla = new ImageView(this.main_activity.getBaseContext());
-        img = new ImageView(img_olla.getContext());
+        View img_aux = new ImageView(this.main_activity.getBaseContext());
+        img = new ImageView(img_aux.getContext());
         img.setImageResource(R.drawable.download);
         DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(this.img);
         downloadTask.execute(this.url);
         mainLayout.addView(this.img);
 
-        View footer_olla = new RelativeLayout(this.main_activity.getBaseContext());
-        footer = new RelativeLayout(footer_olla.getContext());
+        View footer_aux = new RelativeLayout(this.main_activity.getBaseContext());
+        footer = new RelativeLayout(footer_aux.getContext());
         footer.setMinimumHeight(120);
         mainLayout.addView(footer);
 
         footer.setPadding(20, 0, 40, 0);
 
+        createButtons(footer, title);
+/*
         View points_text_olla = new TextView(this.main_activity.getBaseContext());
         TextView points_text = new TextView(points_text_olla.getContext());
         points_text.setText(Integer.toString(points));
@@ -174,10 +176,36 @@ public class Token {
             }
         });
 
-
+*/
         /*RelativeLayout.LayoutParams params_DIVIDER = (RelativeLayout.LayoutParams)divider.getLayoutParams();
         params_DIVIDER.addRule(RelativeLayout.BELOW);
         divider.setLayoutParams(params_DIVIDER);*/
+    }
+
+    private void createButtons(RelativeLayout footer, final String title_string) {
+        View points_text_olla = new TextView(this.main_activity.getBaseContext());
+        TextView points_text = new TextView(points_text_olla.getContext());
+        points_text.setText(Integer.toString(points));
+        points_text.setTextColor(Color.parseColor("#B40404"));
+        footer.addView(points_text);
+
+        View btn_UP_aux = new ImageButton(this.main_activity.getBaseContext());
+        ImageButton btn_UP = new ImageButton(btn_UP_aux.getContext());
+        btn_UP.setImageResource(R.drawable.points_black);
+        btn_UP.setBackgroundColor(0x00000000);
+        footer.addView(btn_UP);
+
+        btn_UP.setId(id);
+
+        btn_UP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(main_activity, "Btn UP Click - " + title_string, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
     public class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
@@ -211,6 +239,10 @@ public class Token {
             //bmImage.setLayoutParams(parms);
             bmImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
             bmImage.setAdjustViewBounds(true);
+            counter++;
+            if (counter%5==0){
+                MainActivity.loading=false;
+            }
         }
     }
 

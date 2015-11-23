@@ -1,13 +1,8 @@
 package uscr.com.uscr015;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,31 +20,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ScrollViewListener {
 
     private JSONObject jsonObject;
+    private int actualID = 0;
+    public static boolean loading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //new task().execute();
-        new GetAllTokensTask().execute(new ApiConnector());
-    }
+        ScrollViewExt mainScrollView = (ScrollViewExt) findViewById(R.id.scrollView);
+        mainScrollView.setScrollViewListener(this);
 
+        //insertToDatabase(58, 5);
+        new GetTokensTask().execute(new ApiConnector());
+    }
 
     private void createTokens(JSONArray jsonArray)
     {
@@ -58,12 +50,12 @@ public class MainActivity extends Activity {
         String url = null;
         int points = 0;
         Token ficha = new Token(this);
-        //int lengthDB = jsonArray.length();
+        int lengthDB = jsonArray.length();
         for (int i=0; i<10; i++){
             jsonObject = null;
 
             try {
-                jsonObject = jsonArray.getJSONObject(i);
+                jsonObject = jsonArray.getJSONObject(lengthDB-i);
                 id = jsonObject.getInt("id");
                 title = jsonObject.getString("title");
                 Log.e("ERROR",jsonObject.getString("title"));
@@ -74,26 +66,39 @@ public class MainActivity extends Activity {
 
                 ficha.display_Token();
 
-
                 //createTOKEN(id, url, points, "title");
 
             } catch (JSONException e){
                 e.printStackTrace();
             }
         }
-
-
     }
 
+    @Override
+    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+        // We take the last son in the scrollview
+        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
 
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            // do stuff
+            if (!loading) {
+                MainActivity.loading = true;
+                Toast.makeText(this, "Cargando más...", Toast.LENGTH_SHORT).show();
+                this.actualID += 5;
+                new GetTokensTask().execute(new ApiConnector());
+            }
+        }
+    }
 
-    private class GetAllTokensTask extends AsyncTask<ApiConnector, Long, JSONArray>
+    private class GetTokensTask extends AsyncTask<ApiConnector, Long, JSONArray>
     {
 
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
-            return params[0].GetAllTokens();
-
+            Log.e("actualID ", Integer.toString(actualID));
+            return params[0].GetTokens(actualID);
         }
 
         @Override
@@ -102,24 +107,21 @@ public class MainActivity extends Activity {
                 Log.e("ERROR","JSON ARRAY no tiene contenido.");
             } else {
                 createTokens(jsonArray);
+
             }
         }
     }
 
-
-    private void insertToDatabase(String url){
+    private void insertToDatabase(final int id, final int value){
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
                 //String paramUsername = params[0];
                 //String paramAddress = params[1];
 
-
-                String url = "METIDAAAAA";
-
-
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("url", url));
+                nameValuePairs.add(new BasicNameValuePair("id", Integer.toString(id)));
+                nameValuePairs.add(new BasicNameValuePair("value", Integer.toString(value)));
 
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
@@ -150,8 +152,7 @@ public class MainActivity extends Activity {
             }
         }
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
-        sendPostReqAsyncTask.execute(url);
+        sendPostReqAsyncTask.execute(Integer.toString(value));
     }
-
 }
 
