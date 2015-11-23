@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.InputStream;
 
@@ -79,8 +80,8 @@ public class Token {
         header.addView(title_text);
 
         View img_olla = new ImageView(this.main_activity.getBaseContext());
-        this.img = new ImageView(img_olla.getContext());
-        this.img.setImageResource(R.drawable.download);
+        img = new ImageView(img_olla.getContext());
+        img.setImageResource(R.drawable.download);
         DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(this.img);
         downloadTask.execute(this.url);
         mainLayout.addView(this.img);
@@ -144,6 +145,35 @@ public class Token {
         divider.setImageResource(R.drawable.divider);
 
         mainLayout.addView(divider);
+
+        btn_UP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(main_activity, "Btn UP Click - " + title, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_DOWN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(main_activity, "Btn DOWN Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_FAV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(main_activity, "Btn FAV Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_SHARE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(main_activity, "Btn SHARE Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         /*RelativeLayout.LayoutParams params_DIVIDER = (RelativeLayout.LayoutParams)divider.getLayoutParams();
         params_DIVIDER.addRule(RelativeLayout.BELOW);
