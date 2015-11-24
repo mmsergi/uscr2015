@@ -1,5 +1,6 @@
 package uscr.com.uscr015;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
         setContentView(R.layout.activity_main);
 
         ScrollViewExt mainScrollView = (ScrollViewExt) findViewById(R.id.scrollView);
+        mainScrollView.setBackgroundColor(Color.DKGRAY);
         mainScrollView.setScrollViewListener(this);
 
         //insertToDatabase(58, 5);
