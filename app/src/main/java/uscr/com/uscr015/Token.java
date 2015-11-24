@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,6 +87,8 @@ public class Token {
         DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(this.img);
         downloadTask.execute(this.url);
         mainLayout.addView(this.img);
+        final Animation myRotation = AnimationUtils.loadAnimation(main_activity.getApplicationContext(), R.anim.rotator);
+        img.startAnimation(myRotation);
 
         View footer_aux = new RelativeLayout(this.main_activity.getBaseContext());
         footer = new RelativeLayout(footer_aux.getContext());
@@ -229,6 +233,7 @@ public class Token {
         }
 
         protected void onPostExecute(Bitmap result) {
+            bmImage.clearAnimation();
             bmImage.setImageBitmap(result);
 
             Display display = main_activity.getWindowManager().getDefaultDisplay();
