@@ -232,17 +232,6 @@ public class Token {
         params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
         btn_DOWN.setLayoutParams(params_btn_DOWN);
 
-        View btn_FAV_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_FAV = new ImageButton(btn_FAV_olla.getContext());
-        btn_FAV.setImageResource(R.drawable.fav);
-        btn_FAV.setBackgroundColor(0x00000000);
-        footer.addView(btn_FAV);
-
-        RelativeLayout.LayoutParams params_btn_FAV = (RelativeLayout.LayoutParams)btn_FAV.getLayoutParams();
-        //params_btn_FAV.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params_btn_FAV.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        btn_FAV.setLayoutParams(params_btn_FAV);
-
         View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
         ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
         btn_SHARE.setImageResource(R.drawable.share);
