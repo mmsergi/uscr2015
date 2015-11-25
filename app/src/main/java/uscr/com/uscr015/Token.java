@@ -2,20 +2,12 @@ package uscr.com.uscr015;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -28,10 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -90,7 +78,7 @@ public class Token {
         View title_text_aux = new TextView(this.main_activity.getBaseContext());
         TextView title_text = new TextView(title_text_aux.getContext());
         title_text.setText(title);
-        title_text.setTextColor(Color.parseColor("#FFFFFF"));
+        title_text.setTextColor(Color.parseColor("#B40404"));
         header.addView(title_text);
 
         View img_aux = new ImageView(this.main_activity.getBaseContext());
@@ -109,7 +97,7 @@ public class Token {
 
         footer.setPadding(20, 0, 40, 0);
 
-        createButtons(mainLayout, footer, title, img);
+        createButtons(footer, title);
 /*
         View points_text_olla = new TextView(this.main_activity.getBaseContext());
         TextView points_text = new TextView(points_text_olla.getContext());
@@ -198,12 +186,11 @@ public class Token {
         divider.setLayoutParams(params_DIVIDER);*/
     }
 
-    private void createButtons(LinearLayout mainLayout, RelativeLayout footer, final String title_string, final ImageView imgShare ) {
-
+    private void createButtons(RelativeLayout footer, final String title_string) {
         View points_text_olla = new TextView(this.main_activity.getBaseContext());
         TextView points_text = new TextView(points_text_olla.getContext());
         points_text.setText(Integer.toString(points));
-        points_text.setTextColor(Color.parseColor("#FFFFFF"));
+        points_text.setTextColor(Color.parseColor("#B40404"));
         footer.addView(points_text);
 
         View btn_UP_aux = new ImageButton(this.main_activity.getBaseContext());
@@ -221,63 +208,7 @@ public class Token {
             }
         });
 
-        View btn_DOWN_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
-        btn_DOWN.setImageResource(R.drawable.down_vote);
-        btn_DOWN.setBackgroundColor(0x00000000);
-        footer.addView(btn_DOWN);
 
-        RelativeLayout.LayoutParams params_btn_DOWN = (RelativeLayout.LayoutParams)btn_DOWN.getLayoutParams();
-        //params.addRule(RelativeLayout.BELOW, id);
-        params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
-        btn_DOWN.setLayoutParams(params_btn_DOWN);
-
-        View btn_FAV_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_FAV = new ImageButton(btn_FAV_olla.getContext());
-        btn_FAV.setImageResource(R.drawable.fav);
-        btn_FAV.setBackgroundColor(0x00000000);
-        footer.addView(btn_FAV);
-
-        RelativeLayout.LayoutParams params_btn_FAV = (RelativeLayout.LayoutParams)btn_FAV.getLayoutParams();
-        //params_btn_FAV.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params_btn_FAV.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        btn_FAV.setLayoutParams(params_btn_FAV);
-
-        View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
-        btn_SHARE.setImageResource(R.drawable.share);
-        btn_SHARE.setBackgroundColor(0x00000000);
-        footer.addView(btn_SHARE);
-
-        RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams)btn_SHARE.getLayoutParams();
-        params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
-        btn_SHARE.setLayoutParams(params_btn_SHARE);
-
-        btn_SHARE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Bitmap bitmapImg = ((BitmapDrawable)imgShare.getDrawable()).getBitmap();
-                //Bitmap bitmapImg = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.fav);
-
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, title_string);
-                String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
-                Uri screenshotUri = Uri.parse(path);
-
-                intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                intent.setType("image/*");
-                main_activity.startActivity(Intent.createChooser(intent, "Share image via..."));
-
-                //File imageFileToShare = new File(imagePath);
-                //Uri pictureUri = Uri.parse("android.resource://uscr.com.uscr015/drawable/fav");
-//                Uri pictureUri = Uri.fromFile(new File("/storage/emulated/0/profile.png"));
-//                share.putExtra(Intent.EXTRA_STREAM, pictureUri);
-//                share.putExtra(Intent.EXTRA_TEXT, title_string);
-//                main_activity.startActivity(Intent.createChooser(share, "Share Image"));
-            }
-        });
 
     }
 
@@ -319,6 +250,5 @@ public class Token {
             }
         }
     }
-
 
 }
