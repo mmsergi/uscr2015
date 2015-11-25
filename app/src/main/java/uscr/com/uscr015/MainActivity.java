@@ -41,6 +41,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         //insertToDatabase(58, 5);
         new GetTokensTask().execute(new ApiConnector());
+        
     }
 
     private void createTokens(JSONArray jsonArray)
