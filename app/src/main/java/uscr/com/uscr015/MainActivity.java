@@ -1,5 +1,11 @@
 package uscr.com.uscr015;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.io.IOException;
@@ -21,6 +27,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -31,17 +38,51 @@ public class MainActivity extends Activity implements ScrollViewListener {
     private int actualID = 0;
     public static boolean loading = false;
 
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        prefs = this.getSharedPreferences("uscr.com.uscr015", Context.MODE_PRIVATE);
+
+        if (!prefs.getBoolean("permission", false)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.System.canWrite(this)) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
+                } else {
+                    // continue with your code
+                }
+            } else {
+                // continue with your code
+            }
+        }
+
         ScrollViewExt mainScrollView = (ScrollViewExt) findViewById(R.id.scrollView);
         mainScrollView.setScrollViewListener(this);
+        mainScrollView.setBackgroundColor(Color.DKGRAY);
 
         //insertToDatabase(58, 5);
         new GetTokensTask().execute(new ApiConnector());
-        
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 2909: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permission", "Granted");
+
+                    prefs.edit().putBoolean("permission", true).commit();
+                } else {
+                    Log.e("Permission", "Denied");
+                }
+                return;
+            }
+        }
     }
 
     private void createTokens(JSONArray jsonArray)
