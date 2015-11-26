@@ -59,6 +59,10 @@ public class Token {
     private ImageButton btn_SHARE;
     private ImageButton btn_FAV;
     private View bottom_line;
+    private int img_width;
+    private int img_height;
+    private Bitmap resizedbitmap;
+    private Bitmap bmp;
 
     public Activity main_activity;
 
@@ -81,6 +85,8 @@ public class Token {
         this.url = url_token;
         this.points = points_token;
         this.title = title_token;
+        this.img_height = 40;
+        this.img_width = 40;
     }
 
     public void display_Token(){
@@ -211,7 +217,12 @@ public class Token {
 
         View btn_UP_aux = new ImageButton(this.main_activity.getBaseContext());
         final ImageButton btn_UP = new ImageButton(btn_UP_aux.getContext());
-        btn_UP.setImageResource(R.drawable.vote_up_gray);
+
+        bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
+        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+        btn_UP.setImageBitmap(resizedbitmap);
+
+        //btn_UP.setImageResource(R.drawable.vote_up_gray);
         btn_UP.setBackgroundColor(0x00000000);
         footer.addView(btn_UP);
 
@@ -228,7 +239,12 @@ public class Token {
 
         View btn_DOWN_olla = new ImageButton(this.main_activity.getBaseContext());
         final ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
-        btn_DOWN.setImageResource(R.drawable.vote_down_gray);
+
+        bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
+        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+        btn_DOWN.setImageBitmap(resizedbitmap);
+
+        //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
         btn_DOWN.setBackgroundColor(0x00000000);
         footer.addView(btn_DOWN);
 
@@ -255,9 +271,15 @@ public class Token {
             @Override
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ + 1));
-                btn_UP.setImageResource(R.drawable.vote_up_blue);
+                bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_blue);
+                resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                btn_UP.setImageBitmap(resizedbitmap);
+                //btn_UP.setImageResource(R.drawable.vote_up_blue);
                 if (pointsSelected == 2) {
-                    btn_DOWN.setImageResource(R.drawable.vote_down_gray);
+                    bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
+                    resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                    btn_DOWN.setImageBitmap(resizedbitmap);
+                    //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
                 }
                 pointsSelected = 1;
             }
@@ -268,9 +290,15 @@ public class Token {
             @Override
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ - 1));
-                btn_DOWN.setImageResource(R.drawable.vote_down_blue);
+                bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_blue);
+                resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                btn_DOWN.setImageBitmap(resizedbitmap);
+                //btn_DOWN.setImageResource(R.drawable.vote_down_blue);
                 if (pointsSelected == 1) {
-                    btn_UP.setImageResource(R.drawable.vote_up_gray);
+                    bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
+                    resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                    btn_UP.setImageBitmap(resizedbitmap);
+                    //btn_UP.setImageResource(R.drawable.vote_up_gray);
                 }
                 pointsSelected = 2;
             }
@@ -279,7 +307,12 @@ public class Token {
 
         View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
         ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
-        btn_SHARE.setImageResource(R.drawable.share);
+
+        bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.share);
+        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+        btn_SHARE.setImageBitmap(resizedbitmap);
+
+        //btn_SHARE.setImageResource(R.drawable.share);
         btn_SHARE.setBackgroundColor(0x00000000);
         footer.addView(btn_SHARE);
 
