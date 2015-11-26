@@ -1,10 +1,12 @@
 package uscr.com.uscr015;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -29,7 +31,11 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements ScrollViewListener {
@@ -62,7 +68,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         ScrollViewExt mainScrollView = (ScrollViewExt) findViewById(R.id.scrollView);
         mainScrollView.setScrollViewListener(this);
-        mainScrollView.setBackgroundColor(Color.DKGRAY);
+        mainScrollView.setBackgroundColor(Color.WHITE);
 
         //insertToDatabase(58, 5);
         new GetTokensTask().execute(new ApiConnector());
@@ -121,8 +127,8 @@ public class MainActivity extends Activity implements ScrollViewListener {
         // We take the last son in the scrollview
         View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
-
         // if diff is zero, then the bottom has been reached
+
         if (diff == 0) {
             // do stuff
             if (!loading) {
@@ -132,6 +138,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
                 new GetTokensTask().execute(new ApiConnector());
             }
         }
+
     }
 
     private class GetTokensTask extends AsyncTask<ApiConnector, Long, JSONArray>
@@ -145,11 +152,29 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
-            if(jsonArray.isNull(0)){
-                Log.e("ERROR","JSON ARRAY no tiene contenido.");
+            if (jsonArray!=null) {
+                if (jsonArray.isNull(0)) {
+                    Log.e("ERROR", "JSON ARRAY no tiene contenido.");
+                } else {
+                    createTokens(jsonArray);
+                }
             } else {
-                createTokens(jsonArray);
+                LinearLayout mainLayout = (LinearLayout) findViewById(R.id.MainLayout);
 
+                View img_aux = new ImageView(getBaseContext());
+                ImageView img = new ImageView(img_aux.getContext());
+                img.setImageResource(R.drawable.noconnection);
+                mainLayout.addView(img);
+                img.setPadding(0, 400, 0, 0);
+
+                View message_text_olla = new TextView(getBaseContext());
+                TextView message_text = new TextView(message_text_olla.getContext());
+                message_text.setText("Comprueba tu conexión y reinicia la aplicación");
+                message_text.setTextColor(Color.parseColor("#000000"));
+                message_text.setTypeface(null, Typeface.BOLD);
+                //message_text.setGravity(Gravity.CENTER);
+                message_text.setPadding(100,100,0,0);
+                mainLayout.addView(message_text);
             }
         }
     }

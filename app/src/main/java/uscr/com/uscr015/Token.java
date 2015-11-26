@@ -9,16 +9,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -54,11 +58,12 @@ public class Token {
     private ImageButton btn_DOWN;
     private ImageButton btn_SHARE;
     private ImageButton btn_FAV;
-    private ImageView divider;
+    private View bottom_line;
 
     public Activity main_activity;
 
     private int counter = 0;
+    int pointsSelected;
 
     public Token(MainActivity mainActivity) {
 
@@ -90,8 +95,12 @@ public class Token {
         View title_text_aux = new TextView(this.main_activity.getBaseContext());
         TextView title_text = new TextView(title_text_aux.getContext());
         title_text.setText(title);
-        title_text.setTextColor(Color.parseColor("#FFFFFF"));
+        title_text.setTextSize(20);
+        title_text.setTypeface(null, Typeface.BOLD);
+        title_text.setTextColor(Color.parseColor("#000000"));
         header.addView(title_text);
+
+        header.setPadding(20, 30, 0, 20);
 
         View img_aux = new ImageView(this.main_activity.getBaseContext());
         img = new ImageView(img_aux.getContext());
@@ -107,35 +116,17 @@ public class Token {
         footer.setMinimumHeight(120);
         mainLayout.addView(footer);
 
-        footer.setPadding(20, 0, 40, 0);
+        footer.setPadding(20, 0, 20, 0);
 
-        createButtons(mainLayout, footer, title, img);
+        createButtons(footer, title, img, points);
+
+        bottom_line = new View(this.main_activity);
+        bottom_line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 3));
+        bottom_line.setBackgroundColor(Color.LTGRAY);
+        mainLayout.addView(bottom_line);
+
+
 /*
-        View points_text_olla = new TextView(this.main_activity.getBaseContext());
-        TextView points_text = new TextView(points_text_olla.getContext());
-        points_text.setText(Integer.toString(points));
-        points_text.setTextColor(Color.parseColor("#B40404"));
-        footer.addView(points_text);
-
-        View btn_UP_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_UP = new ImageButton(btn_UP_olla.getContext());
-        btn_UP.setImageResource(R.drawable.up_vote);
-        btn_UP.setBackgroundColor(0x00000000);
-        footer.addView(btn_UP);
-
-        btn_UP.setId(id);
-
-        View btn_DOWN_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
-        btn_DOWN.setImageResource(R.drawable.down_vote);
-        btn_DOWN.setBackgroundColor(0x00000000);
-        footer.addView(btn_DOWN);
-
-        RelativeLayout.LayoutParams params_btn_DOWN = (RelativeLayout.LayoutParams)btn_DOWN.getLayoutParams();
-        //params.addRule(RelativeLayout.BELOW, id);
-        params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
-        btn_DOWN.setLayoutParams(params_btn_DOWN);
-
         View btn_FAV_olla = new ImageButton(this.main_activity.getBaseContext());
         ImageButton btn_FAV = new ImageButton(btn_FAV_olla.getContext());
         btn_FAV.setImageResource(R.drawable.fav);
@@ -198,39 +189,93 @@ public class Token {
         divider.setLayoutParams(params_DIVIDER);*/
     }
 
-    private void createButtons(LinearLayout mainLayout, RelativeLayout footer, final String title_string, final ImageView imgShare ) {
+    private void createButtons(RelativeLayout footer, final String title_string, final ImageView imgShare , final int points_) {
+
+        pointsSelected = 0;
 
         View points_text_olla = new TextView(this.main_activity.getBaseContext());
-        TextView points_text = new TextView(points_text_olla.getContext());
-        points_text.setText(Integer.toString(points));
-        points_text.setTextColor(Color.parseColor("#FFFFFF"));
+        final TextView points_text = new TextView(points_text_olla.getContext());
+        points_text.setText("Puntos: " + Integer.toString(points_));
+        points_text.setTextColor(Color.parseColor("#000000"));
+        points_text.setTypeface(null, Typeface.BOLD);
         footer.addView(points_text);
 
+        RelativeLayout.LayoutParams rel_points_text = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        rel_points_text.setMargins(20,10,0,20);
+
+        points_text.setLayoutParams(rel_points_text);
+
+        points_text.setId(points_);
+
         View btn_UP_aux = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_UP = new ImageButton(btn_UP_aux.getContext());
-        btn_UP.setImageResource(R.drawable.points_black);
+        final ImageButton btn_UP = new ImageButton(btn_UP_aux.getContext());
+        btn_UP.setImageResource(R.drawable.vote_up_gray);
         btn_UP.setBackgroundColor(0x00000000);
         footer.addView(btn_UP);
 
+        RelativeLayout.LayoutParams params_btn_UP = (RelativeLayout.LayoutParams)btn_UP.getLayoutParams();
+        //params.addRule(RelativeLayout.BELOW, id);
+        params_btn_UP.addRule(RelativeLayout.BELOW, points_);
+        params_btn_UP.setMargins(0,0,20,20);
+        btn_UP.setLayoutParams(params_btn_UP);
+
+
         btn_UP.setId(id);
 
-        btn_UP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(main_activity, "Btn UP Click - " + title_string, Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
         View btn_DOWN_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
-        btn_DOWN.setImageResource(R.drawable.down_vote);
+        final ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
+        btn_DOWN.setImageResource(R.drawable.vote_down_gray);
         btn_DOWN.setBackgroundColor(0x00000000);
         footer.addView(btn_DOWN);
 
         RelativeLayout.LayoutParams params_btn_DOWN = (RelativeLayout.LayoutParams)btn_DOWN.getLayoutParams();
         //params.addRule(RelativeLayout.BELOW, id);
         params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
+        params_btn_DOWN.addRule(RelativeLayout.BELOW, points_);
         btn_DOWN.setLayoutParams(params_btn_DOWN);
+
+        //use a GradientDrawable with only one color set, to make it a solid color
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(Color.WHITE); //white background
+        border.setStroke(5, Color.LTGRAY); //black border with full opacity
+        border.setCornerRadius(360);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            btn_UP.setBackgroundDrawable(border);
+            btn_DOWN.setBackgroundDrawable(border);
+        } else {
+            btn_UP.setBackground(border);
+            btn_DOWN.setBackground(border);
+        }
+
+        btn_UP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                points_text.setText("Puntos: " + Integer.toString(points_ + 1));
+                btn_UP.setImageResource(R.drawable.vote_up_blue);
+                if (pointsSelected == 2) {
+                    btn_DOWN.setImageResource(R.drawable.vote_down_gray);
+                }
+                pointsSelected = 1;
+            }
+
+        });
+
+        btn_DOWN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                points_text.setText("Puntos: " + Integer.toString(points_ - 1));
+                btn_DOWN.setImageResource(R.drawable.vote_down_blue);
+                if (pointsSelected == 1) {
+                    btn_UP.setImageResource(R.drawable.vote_up_gray);
+                }
+                pointsSelected = 2;
+            }
+        });
+
 
         View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
         ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
@@ -269,6 +314,7 @@ public class Token {
         });
 
     }
+
 
     public class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;

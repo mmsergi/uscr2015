@@ -1,6 +1,9 @@
 package uscr.com.uscr015;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -73,4 +76,6 @@ public class ApiConnector {
         }
         return jsonArray;
     }
+
+
 }
