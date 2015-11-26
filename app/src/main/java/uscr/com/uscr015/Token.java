@@ -257,16 +257,24 @@ public class Token {
         btn_DOWN.setLayoutParams(params_btn_DOWN);
 
         //use a GradientDrawable with only one color set, to make it a solid color
-        GradientDrawable border = new GradientDrawable();
-        border.setColor(Color.WHITE); //white background
-        border.setStroke(5, Color.LTGRAY); //black border with full opacity
-        border.setCornerRadius(360);
+        final GradientDrawable border_btm = new GradientDrawable();
+        border_btm.setColor(Color.WHITE); //white background
+        border_btm.setStroke(3, Color.LTGRAY); //black border with full opacity
+        border_btm.setCornerRadius(360);
+
+        //use a GradientDrawable with only one color set, to make it a solid color
+        final GradientDrawable border_up = new GradientDrawable();
+        border_up.setColor(Color.WHITE); //white background
+        border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
+        border_up.setCornerRadius(360);
+
+
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            btn_UP.setBackgroundDrawable(border);
-            btn_DOWN.setBackgroundDrawable(border);
+            btn_UP.setBackgroundDrawable(border_up);
+            btn_DOWN.setBackgroundDrawable(border_btm);
         } else {
-            btn_UP.setBackground(border);
-            btn_DOWN.setBackground(border);
+            btn_UP.setBackground(border_up);
+            btn_DOWN.setBackground(border_btm);
         }
 
         btn_UP.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +296,28 @@ public class Token {
 
         });
 
+        btn_UP.setOnTouchListener(new TextView.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    border_up.setColor(Color.LTGRAY); //white background
+                    border_up.setStroke(3, Color.GRAY); //black border with full opacity
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    border_up.setColor(Color.WHITE); //white background
+                    border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
+                } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    border_up.setColor(Color.WHITE); //white background
+                    border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
+                }
+
+                return false;
+            }
+        });
+
+
+
         btn_DOWN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -303,6 +333,25 @@ public class Token {
                     //btn_UP.setImageResource(R.drawable.vote_up_gray);
                 }
                 pointsSelected = 2;
+            }
+        });
+
+        btn_DOWN.setOnTouchListener(new TextView.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    border_btm.setColor(Color.LTGRAY); //white background
+                    border_btm.setStroke(3, Color.GRAY); //black border with full opacity
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    border_btm.setColor(Color.WHITE); //white background
+                    border_btm.setStroke(3, Color.LTGRAY); //black border with full opacity
+                } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    border_btm.setColor(Color.WHITE); //white background
+                    border_btm.setStroke(3, Color.LTGRAY); //black border with full opacity
+                }
+                return false;
             }
         });
 
