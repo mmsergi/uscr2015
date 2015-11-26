@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -271,13 +273,13 @@ public class Token {
             @Override
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ + 1));
-                bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_blue);
-                resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_blue);
+                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
                 btn_UP.setImageBitmap(resizedbitmap);
                 //btn_UP.setImageResource(R.drawable.vote_up_blue);
                 if (pointsSelected == 2) {
-                    bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
-                    resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                    bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
+                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
                     btn_DOWN.setImageBitmap(resizedbitmap);
                     //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
                 }
@@ -290,13 +292,13 @@ public class Token {
             @Override
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ - 1));
-                bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_blue);
-                resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_blue);
+                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
                 btn_DOWN.setImageBitmap(resizedbitmap);
                 //btn_DOWN.setImageResource(R.drawable.vote_down_blue);
                 if (pointsSelected == 1) {
-                    bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
-                    resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                    bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
+                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
                     btn_UP.setImageBitmap(resizedbitmap);
                     //btn_UP.setImageResource(R.drawable.vote_up_gray);
                 }
@@ -305,7 +307,69 @@ public class Token {
         });
 
 
-        View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
+
+        final TextView share_view = new TextView(this.main_activity);
+        share_view.setText("Compartir");
+        share_view.setTextColor(Color.WHITE);
+        share_view.setTextSize(20);
+        share_view.setTypeface(null, Typeface.BOLD);
+        share_view.setBackgroundColor(Color.rgb(64, 191, 43));
+        share_view.setPadding(30, 10, 30, 10);
+
+        footer.addView(share_view);
+
+        RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams) share_view.getLayoutParams();
+        params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
+        share_view.setLayoutParams(params_btn_SHARE);
+
+        final GradientDrawable shape =  new GradientDrawable();
+        shape.setCornerRadius(15);
+        shape.setColor(Color.rgb(64, 191, 43));
+        share_view.setBackground(shape);
+
+        share_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Bitmap bitmapImg = ((BitmapDrawable) imgShare.getDrawable()).getBitmap();
+                //Bitmap bitmapImg = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.fav);
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, title_string);
+                String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
+                Uri screenshotUri = Uri.parse(path);
+
+                intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                intent.setType("image/*");
+                main_activity.startActivity(Intent.createChooser(intent, "Share image via..."));
+
+                //File imageFileToShare = new File(imagePath);
+                //Uri pictureUri = Uri.parse("android.resource://uscr.com.uscr015/drawable/fav");
+//                Uri pictureUri = Uri.fromFile(new File("/storage/emulated/0/profile.png"));
+//                share.putExtra(Intent.EXTRA_STREAM, pictureUri);
+//                share.putExtra(Intent.EXTRA_TEXT, title_string);
+//                main_activity.startActivity(Intent.createChooser(share, "Share Image"));
+            }
+        });
+
+        share_view.setOnTouchListener(new TextView.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    shape.setColor(Color.rgb(34, 139, 34));
+                } else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    shape.setColor(Color.rgb(64, 191, 43));
+                } else if(event.getAction() == MotionEvent.ACTION_CANCEL)
+                    shape.setColor(Color.rgb(64, 191, 43));
+                return false;
+            }
+        });
+
+
+        /*View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
         ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
 
         bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.share);
@@ -344,7 +408,7 @@ public class Token {
 //                share.putExtra(Intent.EXTRA_TEXT, title_string);
 //                main_activity.startActivity(Intent.createChooser(share, "Share Image"));
             }
-        });
+        });*/
 
     }
 
