@@ -108,7 +108,7 @@ public class Token {
         title_text.setTextColor(Color.parseColor("#000000"));
         header.addView(title_text);
 
-        header.setPadding(20, 30, 0, 20);
+        header.setPadding(20, 10, 0, 10); //left, top, right, bottom
 
         View img_aux = new ImageView(this.main_activity.getBaseContext());
         img = new ImageView(img_aux.getContext());
@@ -129,7 +129,7 @@ public class Token {
         createButtons(footer, title, img, points);
 
         bottom_line = new View(this.main_activity);
-        bottom_line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 3));
+        bottom_line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2));
         bottom_line.setBackgroundColor(Color.LTGRAY);
         mainLayout.addView(bottom_line);
 
@@ -169,7 +169,7 @@ public class Token {
         RelativeLayout.LayoutParams params_btn_UP = (RelativeLayout.LayoutParams)btn_UP.getLayoutParams();
         //params.addRule(RelativeLayout.BELOW, id);
         params_btn_UP.addRule(RelativeLayout.BELOW, points_);
-        params_btn_UP.setMargins(15, 0, 10, 20); //left, top, right, bottom
+        params_btn_UP.setMargins(19, 0, 10, 20); //left, top, right, bottom
         btn_UP.setLayoutParams(params_btn_UP);
         btn_UP.setPadding(20, 20, 20, 20);
 
@@ -199,13 +199,13 @@ public class Token {
         //use a GradientDrawable with only one color set, to make it a solid color
         final GradientDrawable border_btm = new GradientDrawable();
         border_btm.setColor(Color.WHITE); //white background
-        border_btm.setStroke(3, Color.LTGRAY); //black border with full opacity
+        border_btm.setStroke(2, Color.LTGRAY); //black border with full opacity
         border_btm.setCornerRadius(360);
 
         //use a GradientDrawable with only one color set, to make it a solid color
         final GradientDrawable border_up = new GradientDrawable();
         border_up.setColor(Color.WHITE); //white background
-        border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
+        border_up.setStroke(2, Color.LTGRAY); //black border with full opacity
         border_up.setCornerRadius(360);
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -242,13 +242,13 @@ public class Token {
                 // TODO Auto-generated method stub
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     border_up.setColor(Color.LTGRAY); //white background
-                    border_up.setStroke(3, Color.GRAY); //black border with full opacity
+                    border_up.setStroke(2, Color.GRAY); //black border with full opacity
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     border_up.setColor(Color.WHITE); //white background
-                    border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
+                    border_up.setStroke(2, Color.LTGRAY); //black border with full opacity
                 } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
                     border_up.setColor(Color.WHITE); //white background
-                    border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
+                    border_up.setStroke(2, Color.LTGRAY); //black border with full opacity
                 }
 
                 return false;
@@ -282,13 +282,13 @@ public class Token {
                 // TODO Auto-generated method stub
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     border_btm.setColor(Color.LTGRAY); //white background
-                    border_btm.setStroke(3, Color.GRAY); //black border with full opacity
+                    border_btm.setStroke(2, Color.GRAY); //black border with full opacity
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     border_btm.setColor(Color.WHITE); //white background
-                    border_btm.setStroke(3, Color.LTGRAY); //black border with full opacity
+                    border_btm.setStroke(2, Color.LTGRAY); //black border with full opacity
                 } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
                     border_btm.setColor(Color.WHITE); //white background
-                    border_btm.setStroke(3, Color.LTGRAY); //black border with full opacity
+                    border_btm.setStroke(2, Color.LTGRAY); //black border with full opacity
                 }
                 return false;
             }
@@ -322,7 +322,6 @@ public class Token {
             public void onClick(View v) {
 
                 Bitmap bitmapImg = ((BitmapDrawable) imgShare.getDrawable()).getBitmap();
-                //Bitmap bitmapImg = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.fav);
 
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_TEXT, title_string);
@@ -332,13 +331,6 @@ public class Token {
                 intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                 intent.setType("image/*");
                 main_activity.startActivity(Intent.createChooser(intent, "Comparte la imagen:"));
-
-                //File imageFileToShare = new File(imagePath);
-                //Uri pictureUri = Uri.parse("android.resource://uscr.com.uscr015/drawable/fav");
-//                Uri pictureUri = Uri.fromFile(new File("/storage/emulated/0/profile.png"));
-//                share.putExtra(Intent.EXTRA_STREAM, pictureUri);
-//                share.putExtra(Intent.EXTRA_TEXT, title_string);
-//                main_activity.startActivity(Intent.createChooser(share, "Share Image"));
             }
         });
 
@@ -356,48 +348,6 @@ public class Token {
                 return false;
             }
         });
-
-
-        /*View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
-
-        bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.share);
-        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
-        btn_SHARE.setImageBitmap(resizedbitmap);
-
-        //btn_SHARE.setImageResource(R.drawable.share);
-        btn_SHARE.setBackgroundColor(0x00000000);
-        footer.addView(btn_SHARE);
-
-        RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams)btn_SHARE.getLayoutParams();
-        params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
-        btn_SHARE.setLayoutParams(params_btn_SHARE);
-
-        btn_SHARE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Bitmap bitmapImg = ((BitmapDrawable)imgShare.getDrawable()).getBitmap();
-                //Bitmap bitmapImg = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.fav);
-
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, title_string);
-                String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
-                Uri screenshotUri = Uri.parse(path);
-
-                intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                intent.setType("image/*");
-                main_activity.startActivity(Intent.createChooser(intent, "Share image via..."));
-
-                //File imageFileToShare = new File(imagePath);
-                //Uri pictureUri = Uri.parse("android.resource://uscr.com.uscr015/drawable/fav");
-//                Uri pictureUri = Uri.fromFile(new File("/storage/emulated/0/profile.png"));
-//                share.putExtra(Intent.EXTRA_STREAM, pictureUri);
-//                share.putExtra(Intent.EXTRA_TEXT, title_string);
-//                main_activity.startActivity(Intent.createChooser(share, "Share Image"));
-            }
-        });*/
 
     }
 
