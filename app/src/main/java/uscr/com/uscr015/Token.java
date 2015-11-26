@@ -87,8 +87,8 @@ public class Token {
         this.url = url_token;
         this.points = points_token;
         this.title = title_token;
-        this.img_height = 40;
-        this.img_width = 40;
+        this.img_height = 20;
+        this.img_width = 20;
     }
 
     public void display_Token(){
@@ -133,68 +133,6 @@ public class Token {
         bottom_line.setBackgroundColor(Color.LTGRAY);
         mainLayout.addView(bottom_line);
 
-
-/*
-        View btn_FAV_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_FAV = new ImageButton(btn_FAV_olla.getContext());
-        btn_FAV.setImageResource(R.drawable.fav);
-        btn_FAV.setBackgroundColor(0x00000000);
-        footer.addView(btn_FAV);
-
-        RelativeLayout.LayoutParams params_btn_FAV = (RelativeLayout.LayoutParams)btn_FAV.getLayoutParams();
-        //params_btn_FAV.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params_btn_FAV.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        btn_FAV.setLayoutParams(params_btn_FAV);
-
-        View btn_SHARE_olla = new ImageButton(this.main_activity.getBaseContext());
-        ImageButton btn_SHARE = new ImageButton(btn_SHARE_olla.getContext());
-        btn_SHARE.setImageResource(R.drawable.share);
-        btn_SHARE.setBackgroundColor(0x00000000);
-        footer.addView(btn_SHARE);
-
-        RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams)btn_SHARE.getLayoutParams();
-        params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
-        btn_SHARE.setLayoutParams(params_btn_SHARE);
-
-        View divider_olla = new ImageView(this.main_activity.getBaseContext());
-        ImageView divider = new ImageView(divider_olla.getContext());
-        divider.setImageResource(R.drawable.divider);
-
-        mainLayout.addView(divider);
-
-        btn_UP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(main_activity, "Btn UP Click - " + title, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_DOWN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(main_activity, "Btn DOWN Click", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_FAV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(main_activity, "Btn FAV Click", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_SHARE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(main_activity, "Btn SHARE Click", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-*/
-        /*RelativeLayout.LayoutParams params_DIVIDER = (RelativeLayout.LayoutParams)divider.getLayoutParams();
-        params_DIVIDER.addRule(RelativeLayout.BELOW);
-        divider.setLayoutParams(params_DIVIDER);*/
     }
 
     private void createButtons(RelativeLayout footer, final String title_string, final ImageView imgShare , final int points_) {
@@ -211,7 +149,7 @@ public class Token {
         RelativeLayout.LayoutParams rel_points_text = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        rel_points_text.setMargins(20,10,0,20);
+        rel_points_text.setMargins(30,10,0,5);
 
         points_text.setLayoutParams(rel_points_text);
 
@@ -231,8 +169,9 @@ public class Token {
         RelativeLayout.LayoutParams params_btn_UP = (RelativeLayout.LayoutParams)btn_UP.getLayoutParams();
         //params.addRule(RelativeLayout.BELOW, id);
         params_btn_UP.addRule(RelativeLayout.BELOW, points_);
-        params_btn_UP.setMargins(0,0,20,20);
+        params_btn_UP.setMargins(15, 0, 10, 20); //left, top, right, bottom
         btn_UP.setLayoutParams(params_btn_UP);
+        btn_UP.setPadding(20, 20, 20, 20);
 
 
         btn_UP.setId(id);
@@ -255,6 +194,7 @@ public class Token {
         params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
         params_btn_DOWN.addRule(RelativeLayout.BELOW, points_);
         btn_DOWN.setLayoutParams(params_btn_DOWN);
+        btn_DOWN.setPadding(20,20,20,20);
 
         //use a GradientDrawable with only one color set, to make it a solid color
         final GradientDrawable border_btm = new GradientDrawable();
@@ -267,7 +207,6 @@ public class Token {
         border_up.setColor(Color.WHITE); //white background
         border_up.setStroke(3, Color.LTGRAY); //black border with full opacity
         border_up.setCornerRadius(360);
-
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             btn_UP.setBackgroundDrawable(border_up);
@@ -370,6 +309,7 @@ public class Token {
         RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams) share_view.getLayoutParams();
         params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
+        params_btn_SHARE.setMargins(0,0,30,0); //left, top, right bottom
         share_view.setLayoutParams(params_btn_SHARE);
 
         final GradientDrawable shape =  new GradientDrawable();
