@@ -342,7 +342,7 @@ public class Token {
 
                 intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                 intent.setType("image/*");
-                main_activity.startActivity(Intent.createChooser(intent, "Share image via..."));
+                main_activity.startActivity(Intent.createChooser(intent, "Comparte la imagen:"));
 
                 //File imageFileToShare = new File(imagePath);
                 //Uri pictureUri = Uri.parse("android.resource://uscr.com.uscr015/drawable/fav");
