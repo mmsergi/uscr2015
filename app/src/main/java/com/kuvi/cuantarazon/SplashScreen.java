@@ -1,4 +1,4 @@
-package uscr.com.uscr015;
+package com.kuvi.cuantarazon;
 
 /**
  * Created by oriolferrer on 11/11/15.
@@ -7,6 +7,8 @@ package uscr.com.uscr015;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import uscr.kuvi.cuantarazon.R;
 
 public class SplashScreen extends Activity {
 

@@ -1,4 +1,4 @@
-package uscr.com.uscr015;
+package uscr.kuvi.cuantarazon;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
