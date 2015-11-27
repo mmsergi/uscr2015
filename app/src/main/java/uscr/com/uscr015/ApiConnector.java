@@ -63,7 +63,7 @@ public class ApiConnector {
             try {
                String entityResponse = EntityUtils.toString(httpEntity);
 
-                Log.e("Entity Response: ", entityResponse);
+                //Log.e("Entity Response: ", entityResponse);
 
                 jsonArray = new JSONArray(entityResponse);
 

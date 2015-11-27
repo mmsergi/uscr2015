@@ -9,10 +9,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
 import android.net.Uri;
@@ -20,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -61,8 +60,8 @@ public class Token {
     private ImageButton btn_SHARE;
     private ImageButton btn_FAV;
     private View bottom_line;
-    private int img_width;
-    private int img_height;
+    private int img_pixels_size;
+    private int img_pixels_padding;
     private Bitmap resizedbitmap;
     private Bitmap bmp;
 
@@ -70,6 +69,7 @@ public class Token {
 
     private int counter = 0;
     int pointsSelected;
+    private DisplayMetrics metrics;
 
     public Token(MainActivity mainActivity) {
 
@@ -87,8 +87,10 @@ public class Token {
         this.url = url_token;
         this.points = points_token;
         this.title = title_token;
-        this.img_height = 20;
-        this.img_width = 20;
+        metrics = new DisplayMetrics();
+        main_activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        img_pixels_size = metrics.widthPixels/25;
+        img_pixels_padding = metrics.widthPixels/25;
     }
 
     public void display_Token(){
@@ -159,7 +161,7 @@ public class Token {
         final ImageButton btn_UP = new ImageButton(btn_UP_aux.getContext());
 
         bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
-        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
         btn_UP.setImageBitmap(resizedbitmap);
 
         //btn_UP.setImageResource(R.drawable.vote_up_gray);
@@ -171,7 +173,7 @@ public class Token {
         params_btn_UP.addRule(RelativeLayout.BELOW, points_);
         params_btn_UP.setMargins(19, 0, 10, 20); //left, top, right, bottom
         btn_UP.setLayoutParams(params_btn_UP);
-        btn_UP.setPadding(20, 20, 20, 20);
+        btn_UP.setPadding(img_pixels_padding, img_pixels_padding, img_pixels_padding, img_pixels_padding); //left, top, right, bottom
 
 
         btn_UP.setId(id);
@@ -182,7 +184,7 @@ public class Token {
         final ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
 
         bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
-        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
         btn_DOWN.setImageBitmap(resizedbitmap);
 
         //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
@@ -194,7 +196,7 @@ public class Token {
         params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
         params_btn_DOWN.addRule(RelativeLayout.BELOW, points_);
         btn_DOWN.setLayoutParams(params_btn_DOWN);
-        btn_DOWN.setPadding(20,20,20,20);
+        btn_DOWN.setPadding(img_pixels_padding, img_pixels_padding, img_pixels_padding, img_pixels_padding);
 
         //use a GradientDrawable with only one color set, to make it a solid color
         final GradientDrawable border_btm = new GradientDrawable();
@@ -221,12 +223,12 @@ public class Token {
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ + 1));
                 bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_blue);
-                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
                 btn_UP.setImageBitmap(resizedbitmap);
                 //btn_UP.setImageResource(R.drawable.vote_up_blue);
                 if (pointsSelected == 2) {
                     bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
-                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
                     btn_DOWN.setImageBitmap(resizedbitmap);
                     //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
                 }
@@ -262,12 +264,12 @@ public class Token {
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ - 1));
                 bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_blue);
-                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
                 btn_DOWN.setImageBitmap(resizedbitmap);
                 //btn_DOWN.setImageResource(R.drawable.vote_down_blue);
                 if (pointsSelected == 1) {
                     bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
-                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_width, img_height, true);
+                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
                     btn_UP.setImageBitmap(resizedbitmap);
                     //btn_UP.setImageResource(R.drawable.vote_up_gray);
                 }

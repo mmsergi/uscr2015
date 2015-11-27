@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
     private JSONObject jsonObject;
     private int actualID = 0;
     public static boolean loading = false;
+    private DisplayMetrics metrics = new DisplayMetrics();
 
     private SharedPreferences prefs;
 
@@ -103,10 +105,10 @@ public class MainActivity extends Activity implements ScrollViewListener {
             jsonObject = null;
 
             try {
-                jsonObject = jsonArray.getJSONObject(lengthDB-i);
+                jsonObject = jsonArray.getJSONObject(lengthDB - i);
                 id = jsonObject.getInt("id");
                 title = jsonObject.getString("title");
-                Log.e("ERROR",jsonObject.getString("title"));
+                //Log.e("ERROR",jsonObject.getString("title"));
                 url = jsonObject.getString("url");
                 points = jsonObject.getInt("points");
 
