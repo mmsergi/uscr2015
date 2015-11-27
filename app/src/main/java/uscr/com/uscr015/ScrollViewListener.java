@@ -1,4 +1,8 @@
-package com.kuvi.cuantarazon;
+package uscr.com.uscr015;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.ScrollView;
 
 /**
  * Created by Sergi on 23/11/2015.

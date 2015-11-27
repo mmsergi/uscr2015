@@ -1,4 +1,4 @@
-package uscr.kuvi.cuantarazon;
+package uscr.com.uscr015;
 
 import org.junit.Test;
 

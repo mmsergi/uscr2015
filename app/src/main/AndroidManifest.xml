@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uscr.kuvi.cuantarazon" >
+    package="uscr.com.uscr015" >
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,7 @@
         android:largeHeap="true">
         <!--android:theme="@style/AppTheme" >-->
         <activity
-            android:name="uscr.kuvi.com.kuvi.cuantarazon.SplashScreen"
+            android:name=".SplashScreen"
             android:label="@string/app_name"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
@@ -23,7 +23,7 @@
         </activity>
 
         <activity
-            android:name="uscr.kuvi.com.kuvi.cuantarazon.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:configChanges="orientation"
             android:screenOrientation="portrait">

@@ -1,4 +1,4 @@
-package com.kuvi.cuantarazon;
+package uscr.com.uscr015;
 
 import android.content.Context;
 import android.util.AttributeSet;
