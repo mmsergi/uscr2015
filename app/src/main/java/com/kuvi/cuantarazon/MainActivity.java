@@ -1,7 +1,6 @@
-package uscr.com.uscr015;
+package com.kuvi.cuantarazon;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,19 +9,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,9 +16,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.provider.Settings;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,8 +27,9 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
     private JSONObject jsonObject;
     private int actualID = 0;
-    public static boolean loading = false;
-    private DisplayMetrics metrics = new DisplayMetrics();
+    public static boolean loading = true;
+
+    public static int numTokens = 8;
 
     private SharedPreferences prefs;
 
@@ -53,7 +38,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefs = this.getSharedPreferences("uscr.com.uscr015", Context.MODE_PRIVATE);
+        prefs = this.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
 
         if (!prefs.getBoolean("permission", false)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -100,15 +85,16 @@ public class MainActivity extends Activity implements ScrollViewListener {
         String url = null;
         int points = 0;
         Token ficha = new Token(this);
-        int lengthDB = jsonArray.length();
-        for (int i=0; i<10; i++){
+        int lengthArray = jsonArray.length();
+        for (int i=0; i<lengthArray; i++){
             jsonObject = null;
 
             try {
-                jsonObject = jsonArray.getJSONObject(lengthDB - i);
+                jsonObject = jsonArray.getJSONObject(i);
                 id = jsonObject.getInt("id");
+                actualID = id;
                 title = jsonObject.getString("title");
-                //Log.e("ERROR",jsonObject.getString("title"));
+                Log.e("TITLE: ",String.valueOf(id)+" - "+title);
                 url = jsonObject.getString("url");
                 points = jsonObject.getInt("points");
 
@@ -120,6 +106,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
             } catch (JSONException e){
                 e.printStackTrace();
+                Log.e("ERROR","no se encuentran más tokens en el json array, la i = "+String.valueOf(i));
             }
         }
     }
@@ -136,7 +123,6 @@ public class MainActivity extends Activity implements ScrollViewListener {
             if (!loading) {
                 MainActivity.loading = true;
                 Toast.makeText(this, "Cargando más...", Toast.LENGTH_SHORT).show();
-                this.actualID += 5;
                 new GetTokensTask().execute(new ApiConnector());
             }
         }
@@ -148,7 +134,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
-            Log.e("actualID ", Integer.toString(actualID));
+            //Log.e("actualID ", Integer.toString(actualID));
             return params[0].GetTokens(actualID);
         }
 
@@ -181,47 +167,6 @@ public class MainActivity extends Activity implements ScrollViewListener {
         }
     }
 
-    private void insertToDatabase(final int id, final int value){
-        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
-            @Override
-            protected String doInBackground(String... params) {
-                //String paramUsername = params[0];
-                //String paramAddress = params[1];
 
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("id", Integer.toString(id)));
-                nameValuePairs.add(new BasicNameValuePair("value", Integer.toString(value)));
-
-                try {
-                    HttpClient httpClient = new DefaultHttpClient();
-                    HttpPost httpPost = new HttpPost(
-                            "http://mejorandroid.es/uscr/insert-db.php");
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                    HttpResponse response = httpClient.execute(httpPost);
-
-                    HttpEntity entity = response.getEntity();
-
-
-                } catch (ClientProtocolException e) {
-
-                } catch (IOException e) {
-
-                }
-                return "success";
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                //TextView textViewResult = (TextView) findViewById(R.id.textViewResult);
-                //textViewResult.setText("Inserted");
-            }
-        }
-        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
-        sendPostReqAsyncTask.execute(Integer.toString(value));
-    }
 }
 

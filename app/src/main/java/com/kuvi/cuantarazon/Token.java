@@ -1,10 +1,6 @@
-package uscr.com.uscr015;
+package com.kuvi.cuantarazon;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,15 +8,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -378,16 +366,11 @@ public class Token {
             bmImage.clearAnimation();
             bmImage.setImageBitmap(result);
 
-            Display display = main_activity.getWindowManager().getDefaultDisplay();
-            int width = display.getWidth(); // ((display.getWidth()*20)/100)
-            int height = result.getHeight();// ((display.getHeight()*30)/100)
-
-            //LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
-            //bmImage.setLayoutParams(parms);
             bmImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
             bmImage.setAdjustViewBounds(true);
             counter++;
-            if (counter%5==0){
+
+            if (counter%MainActivity.numTokens==0){
                 MainActivity.loading=false;
             }
         }

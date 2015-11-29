@@ -1,4 +1,4 @@
-package uscr.com.uscr015;
+package com.kuvi.cuantarazon;
 
 /**
  * Created by oriolferrer on 11/11/15.

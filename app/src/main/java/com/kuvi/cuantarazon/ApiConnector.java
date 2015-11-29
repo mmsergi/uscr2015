@@ -1,16 +1,10 @@
-package uscr.com.uscr015;
+package com.kuvi.cuantarazon;
 
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -36,7 +30,6 @@ public class ApiConnector {
         HttpEntity httpEntity = null;
 
         try {
-
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url_select);
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
