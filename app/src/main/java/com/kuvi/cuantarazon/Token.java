@@ -1,7 +1,10 @@
 package com.kuvi.cuantarazon;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -299,7 +303,7 @@ public class Token {
         RelativeLayout.LayoutParams params_btn_SHARE = (RelativeLayout.LayoutParams) share_view.getLayoutParams();
         params_btn_SHARE.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params_btn_SHARE.addRule(RelativeLayout.CENTER_VERTICAL);
-        params_btn_SHARE.setMargins(0,0,30,0); //left, top, right bottom
+        params_btn_SHARE.setMargins(0, 0, 30, 0); //left, top, right bottom
         share_view.setLayoutParams(params_btn_SHARE);
 
         final GradientDrawable shape =  new GradientDrawable();
@@ -308,41 +312,63 @@ public class Token {
         share_view.setBackground(shape);
 
         share_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                          @Override
+                                          public void onClick(View v) {
 
-                Bitmap bitmapImg = ((BitmapDrawable) imgShare.getDrawable()).getBitmap();
+                                              SharedPreferences prefs = main_activity.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
 
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, title_string);
-                String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
-                Uri screenshotUri = Uri.parse(path);
+                                              if (prefs.getBoolean("permission", false)) {
 
-                intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                intent.setType("image/*");
-                main_activity.startActivity(Intent.createChooser(intent, "Comparte la imagen:"));
-            }
-        });
+                                                  Bitmap bitmapImg = ((BitmapDrawable) imgShare.getDrawable()).getBitmap();
 
-        share_view.setOnTouchListener(new TextView.OnTouchListener() {
+                                                  Intent intent = new Intent(Intent.ACTION_SEND);
+                                                  intent.putExtra(Intent.EXTRA_TEXT, "Más imágenes en: https://goo.gl/GPUoTJ");
+                                                  String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
+                                                  Uri screenshotUri = Uri.parse(path);
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    shape.setColor(Color.rgb(34, 139, 34));
-                } else if(event.getAction() == MotionEvent.ACTION_UP) {
-                    shape.setColor(Color.rgb(64, 191, 43));
-                } else if(event.getAction() == MotionEvent.ACTION_CANCEL)
-                    shape.setColor(Color.rgb(64, 191, 43));
-                return false;
-            }
-        });
+                                                  intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                                                  intent.setType("image/*");
+                                                  main_activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
+                                              } else {
+                                                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                      if (!Settings.System.canWrite(main_activity)) {
+                                                          main_activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                                  Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
+                                                      } else {
+                                                          // continue with your code
+                                                      }
+                                                  } else {
+                                                      // continue with your code
+                                                  }
+                                              }
+                                          }
+                                      }
 
-    }
+        );
+
+            share_view.setOnTouchListener(new TextView.OnTouchListener()
+
+                                          {
+
+                                              @Override
+                                              public boolean onTouch(View v, MotionEvent event) {
+                                                  // TODO Auto-generated method stub
+                                                  if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                                      shape.setColor(Color.rgb(34, 139, 34));
+                                                  } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                                                      shape.setColor(Color.rgb(64, 191, 43));
+                                                  } else if (event.getAction() == MotionEvent.ACTION_CANCEL)
+                                                      shape.setColor(Color.rgb(64, 191, 43));
+                                                  return false;
+                                              }
+                                          }
+
+            );
+
+        }
 
 
-    public class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
+        public class DownloadImageWithURLTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
         public DownloadImageWithURLTask(ImageView bmImage) {

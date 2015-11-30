@@ -94,7 +94,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
                 id = jsonObject.getInt("id");
                 actualID = id;
                 title = jsonObject.getString("title");
-                Log.e("TITLE: ",String.valueOf(id)+" - "+title);
+                Log.e("",String.valueOf(id)+" - "+title);
                 url = jsonObject.getString("url");
                 points = jsonObject.getInt("points");
 
