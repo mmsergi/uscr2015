@@ -317,7 +317,27 @@ public class Token {
 
                                               SharedPreferences prefs = main_activity.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
 
-                                              if (prefs.getBoolean("permission", false)) {
+                                              if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                                                  if (prefs.getBoolean("permission", false)) {
+
+                                                      Bitmap bitmapImg = ((BitmapDrawable) imgShare.getDrawable()).getBitmap();
+
+                                                      Intent intent = new Intent(Intent.ACTION_SEND);
+                                                      intent.putExtra(Intent.EXTRA_TEXT, "Más imágenes en: https://goo.gl/GPUoTJ");
+                                                      String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
+                                                      Uri screenshotUri = Uri.parse(path);
+
+                                                      intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                                                      intent.setType("image/*");
+                                                      main_activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
+
+                                                  } else {
+                                                      if (!Settings.System.canWrite(main_activity)) {
+                                                          main_activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                                  Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
+                                                      }
+                                                  }
+                                              } else {
 
                                                   Bitmap bitmapImg = ((BitmapDrawable) imgShare.getDrawable()).getBitmap();
 
@@ -329,17 +349,6 @@ public class Token {
                                                   intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                                                   intent.setType("image/*");
                                                   main_activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
-                                              } else {
-                                                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                      if (!Settings.System.canWrite(main_activity)) {
-                                                          main_activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                                  Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
-                                                      } else {
-                                                          // continue with your code
-                                                      }
-                                                  } else {
-                                                      // continue with your code
-                                                  }
                                               }
                                           }
                                       }
