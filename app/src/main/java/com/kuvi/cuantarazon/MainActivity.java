@@ -2,6 +2,7 @@ package com.kuvi.cuantarazon;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -33,10 +34,17 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
     private SharedPreferences prefs;
 
+    Intent starterIntent;
+    private boolean firstInit = true;
+    private Long actualTime;
+    private Long oldTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        oldTime = System.currentTimeMillis()/1000;
 
         prefs = this.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
 
@@ -45,11 +53,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
                 if (!Settings.System.canWrite(this)) {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
-                } else {
-                    // continue with your code
                 }
-            } else {
-                // continue with your code
             }
         }
 
@@ -57,9 +61,12 @@ public class MainActivity extends Activity implements ScrollViewListener {
         mainScrollView.setScrollViewListener(this);
         mainScrollView.setBackgroundColor(Color.WHITE);
 
+        starterIntent = getIntent();
+
         //insertToDatabase(58, 5);
         new GetTokensTask().execute(new ApiConnector());
     }
+
 
 
     @Override
@@ -167,6 +174,26 @@ public class MainActivity extends Activity implements ScrollViewListener {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+
+        actualTime = System.currentTimeMillis()/1000;
+
+        Long diferencia = (actualTime-oldTime);
+
+        Log.e("DIFERENCIA", diferencia.toString());
+
+        if (firstInit) {
+            firstInit=false;
+        } else if (diferencia>180) {
+            Log.e("RESET", "true");
+            finish();
+            startActivity(starterIntent);
+        }
+
+        oldTime = System.currentTimeMillis()/1000;
+    }
 
 }
 
