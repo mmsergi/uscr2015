@@ -1,6 +1,7 @@
 package com.kuvi.cuantarazon;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +19,12 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +50,20 @@ public class MainActivity extends Activity implements ScrollViewListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LayoutInflater inflater = (LayoutInflater) getActionBar()
+                .getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customActionBarView = inflater.inflate(R.layout.actionbar_custom, null);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayOptions(
+                ActionBar.DISPLAY_SHOW_CUSTOM,
+                ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
+                        | ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setCustomView(customActionBarView,
+                new ActionBar.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
         oldTime = System.currentTimeMillis()/1000;
 
         prefs = this.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
@@ -59,15 +79,11 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         ScrollViewExt mainScrollView = (ScrollViewExt) findViewById(R.id.scrollView);
         mainScrollView.setScrollViewListener(this);
-        mainScrollView.setBackgroundColor(Color.WHITE);
 
         starterIntent = getIntent();
 
-        //insertToDatabase(58, 5);
         new GetTokensTask().execute(new ApiConnector());
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -87,27 +103,31 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
     private void createTokens(JSONArray jsonArray)
     {
-        int id = 0;
-        String title;
-        String url = null;
-        int points = 0;
-        Token ficha = new Token(this);
+
+        Token token = new Token(this);
+
         int lengthArray = jsonArray.length();
-        for (int i=0; i<lengthArray; i++){
+
+        for (int i = 0; i < lengthArray; i++){
             jsonObject = null;
 
             try {
+
                 jsonObject = jsonArray.getJSONObject(i);
-                id = jsonObject.getInt("id");
+
+                int id = jsonObject.getInt("id");
+                String title = jsonObject.getString("title");
+                String url = jsonObject.getString("url");
+                int points = jsonObject.getInt("points");
+
                 actualID = id;
-                title = jsonObject.getString("title");
-                Log.e("",String.valueOf(id)+" - "+title);
-                url = jsonObject.getString("url");
-                points = jsonObject.getInt("points");
+                Log.e("Actual ID", String.valueOf(id));
+                Log.e("Token", title);
 
-                ficha.data_Token(id, url, points, title);
+                //new Token(this, id, url, points, title);
 
-                ficha.display_Token();
+                token.createToken(id, url, points, title);
+
 
                 //createTOKEN(id, url, points, "title");
 
@@ -148,11 +168,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
             if (jsonArray!=null) {
-                if (jsonArray.isNull(0)) {
-                    Log.e("ERROR", "JSON ARRAY no tiene contenido.");
-                } else {
-                    createTokens(jsonArray);
-                }
+                createTokens(jsonArray);
             } else {
                 LinearLayout mainLayout = (LinearLayout) findViewById(R.id.MainLayout);
 
@@ -182,12 +198,12 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         Long diferencia = (actualTime-oldTime);
 
-        Log.e("DIFERENCIA", diferencia.toString());
+        Log.e("Diferencia de segundos", diferencia.toString());
 
         if (firstInit) {
             firstInit=false;
         } else if (diferencia>180) {
-            Log.e("RESET", "true");
+            Log.e("Resetear activity", "true");
             finish();
             startActivity(starterIntent);
         }

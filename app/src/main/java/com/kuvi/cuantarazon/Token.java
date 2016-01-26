@@ -57,44 +57,37 @@ public class Token {
     private Bitmap resizedbitmap;
     private Bitmap bmp;
 
-    public Activity main_activity;
+    public Activity activity;
 
     private int counter = 0;
     int pointsSelected;
     private DisplayMetrics metrics;
 
-    public Token(MainActivity mainActivity) {
+    public Token(Activity activity) {
 
-        this.id = 0;
-        this.url = null;
-        this.points = 0;
-        this.title = null;
-        this.main_activity = mainActivity;
+        this.activity = activity;
 
         //return new Token();
     }
 
-    public void data_Token(int id_token, String url_token, int points_token, String title_token) {
+    public void createToken(int id_token, String url_token, int points_token, String title_token) {
         this.id = id_token;
         this.url = url_token;
         this.points = points_token;
         this.title = title_token;
         metrics = new DisplayMetrics();
-        main_activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         img_pixels_size = metrics.widthPixels/25;
         img_pixels_padding = metrics.widthPixels/25;
-    }
 
-    public void display_Token(){
+        LinearLayout mainLayout = (LinearLayout)this.activity.findViewById(R.id.MainLayout);
 
-        LinearLayout mainLayout = (LinearLayout)this.main_activity.findViewById(R.id.MainLayout);
-
-        View header_aux = new RelativeLayout(this.main_activity.getBaseContext());
+        View header_aux = new RelativeLayout(this.activity.getBaseContext());
         header = new LinearLayout(header_aux.getContext());
         //header.setMinimumHeight(120);
         mainLayout.addView(header);
 
-        View title_text_aux = new TextView(this.main_activity.getBaseContext());
+        View title_text_aux = new TextView(this.activity.getBaseContext());
         TextView title_text = new TextView(title_text_aux.getContext());
         title_text.setText(title);
         title_text.setTextSize(20);
@@ -104,16 +97,16 @@ public class Token {
 
         header.setPadding(20, 10, 0, 10); //left, top, right, bottom
 
-        View img_aux = new ImageView(this.main_activity.getBaseContext());
+        View img_aux = new ImageView(this.activity.getBaseContext());
         img = new ImageView(img_aux.getContext());
         img.setImageResource(R.drawable.download);
         DownloadImageWithURLTask downloadTask = new DownloadImageWithURLTask(this.img);
         downloadTask.execute(this.url);
         mainLayout.addView(this.img);
-        final Animation myRotation = AnimationUtils.loadAnimation(main_activity.getApplicationContext(), R.anim.rotator);
+        final Animation myRotation = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.rotator);
         img.startAnimation(myRotation);
 
-        View footer_aux = new RelativeLayout(this.main_activity.getBaseContext());
+        View footer_aux = new RelativeLayout(this.activity.getBaseContext());
         footer = new RelativeLayout(footer_aux.getContext());
         footer.setMinimumHeight(120);
         mainLayout.addView(footer);
@@ -122,18 +115,18 @@ public class Token {
 
         createButtons(footer, title, img, points);
 
-        bottom_line = new View(this.main_activity);
+        bottom_line = new View(this.activity);
         bottom_line.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2));
         bottom_line.setBackgroundColor(Color.LTGRAY);
         mainLayout.addView(bottom_line);
-
     }
+
 
     private void createButtons(RelativeLayout footer, final String title_string, final ImageView imgShare , final int points_) {
 
         pointsSelected = 0;
 
-        View points_text_olla = new TextView(this.main_activity.getBaseContext());
+        View points_text_olla = new TextView(this.activity.getBaseContext());
         final TextView points_text = new TextView(points_text_olla.getContext());
         points_text.setText("Puntos: " + Integer.toString(points_));
         points_text.setTextColor(Color.parseColor("#000000"));
@@ -149,10 +142,10 @@ public class Token {
 
         points_text.setId(points_);
 
-        View btn_UP_aux = new ImageButton(this.main_activity.getBaseContext());
+        View btn_UP_aux = new ImageButton(this.activity.getBaseContext());
         final ImageButton btn_UP = new ImageButton(btn_UP_aux.getContext());
 
-        bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
+        bmp=BitmapFactory.decodeResource(activity.getResources(), R.drawable.vote_up_gray);
         resizedbitmap=Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
         btn_UP.setImageBitmap(resizedbitmap);
 
@@ -171,25 +164,6 @@ public class Token {
         btn_UP.setId(id);
 
 
-
-        View btn_DOWN_olla = new ImageButton(this.main_activity.getBaseContext());
-        final ImageButton btn_DOWN = new ImageButton(btn_DOWN_olla.getContext());
-
-        bmp=BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
-        resizedbitmap=Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
-        btn_DOWN.setImageBitmap(resizedbitmap);
-
-        //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
-        btn_DOWN.setBackgroundColor(0x00000000);
-        footer.addView(btn_DOWN);
-
-        RelativeLayout.LayoutParams params_btn_DOWN = (RelativeLayout.LayoutParams)btn_DOWN.getLayoutParams();
-        //params.addRule(RelativeLayout.BELOW, id);
-        params_btn_DOWN.addRule(RelativeLayout.RIGHT_OF, id);
-        params_btn_DOWN.addRule(RelativeLayout.BELOW, points_);
-        btn_DOWN.setLayoutParams(params_btn_DOWN);
-        btn_DOWN.setPadding(img_pixels_padding, img_pixels_padding, img_pixels_padding, img_pixels_padding);
-
         //use a GradientDrawable with only one color set, to make it a solid color
         final GradientDrawable border_btm = new GradientDrawable();
         border_btm.setColor(Color.WHITE); //white background
@@ -204,27 +178,18 @@ public class Token {
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             btn_UP.setBackgroundDrawable(border_up);
-            btn_DOWN.setBackgroundDrawable(border_btm);
         } else {
             btn_UP.setBackground(border_up);
-            btn_DOWN.setBackground(border_btm);
         }
 
         btn_UP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 points_text.setText("Puntos: " + Integer.toString(points_ + 1));
-                bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_blue);
+                bmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.vote_up_blue);
                 resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
                 btn_UP.setImageBitmap(resizedbitmap);
-                //btn_UP.setImageResource(R.drawable.vote_up_blue);
-                if (pointsSelected == 2) {
-                    bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_gray);
-                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
-                    btn_DOWN.setImageBitmap(resizedbitmap);
-                    //btn_DOWN.setImageResource(R.drawable.vote_down_gray);
-                }
-                pointsSelected = 1;
+
             }
 
         });
@@ -249,48 +214,7 @@ public class Token {
             }
         });
 
-
-
-        btn_DOWN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                points_text.setText("Puntos: " + Integer.toString(points_ - 1));
-                bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_down_blue);
-                resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
-                btn_DOWN.setImageBitmap(resizedbitmap);
-                //btn_DOWN.setImageResource(R.drawable.vote_down_blue);
-                if (pointsSelected == 1) {
-                    bmp = BitmapFactory.decodeResource(main_activity.getResources(), R.drawable.vote_up_gray);
-                    resizedbitmap = Bitmap.createScaledBitmap(bmp, img_pixels_size, img_pixels_size, true);
-                    btn_UP.setImageBitmap(resizedbitmap);
-                    //btn_UP.setImageResource(R.drawable.vote_up_gray);
-                }
-                pointsSelected = 2;
-            }
-        });
-
-        btn_DOWN.setOnTouchListener(new TextView.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    border_btm.setColor(Color.LTGRAY); //white background
-                    border_btm.setStroke(2, Color.GRAY); //black border with full opacity
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    border_btm.setColor(Color.WHITE); //white background
-                    border_btm.setStroke(2, Color.LTGRAY); //black border with full opacity
-                } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    border_btm.setColor(Color.WHITE); //white background
-                    border_btm.setStroke(2, Color.LTGRAY); //black border with full opacity
-                }
-                return false;
-            }
-        });
-
-
-
-        final TextView share_view = new TextView(this.main_activity);
+        final TextView share_view = new TextView(this.activity);
         share_view.setText("Compartir");
         share_view.setTextColor(Color.WHITE);
         share_view.setTextSize(20);
@@ -315,7 +239,7 @@ public class Token {
                                           @Override
                                           public void onClick(View v) {
 
-                                              SharedPreferences prefs = main_activity.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
+                                              SharedPreferences prefs = activity.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
 
                                               if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                                                   if (prefs.getBoolean("permission", false)) {
@@ -324,16 +248,16 @@ public class Token {
 
                                                       Intent intent = new Intent(Intent.ACTION_SEND);
                                                       intent.putExtra(Intent.EXTRA_TEXT, "Más imágenes en: https://goo.gl/GPUoTJ");
-                                                      String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
+                                                      String path = MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmapImg, "", null);
                                                       Uri screenshotUri = Uri.parse(path);
 
                                                       intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                                                       intent.setType("image/*");
-                                                      main_activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
+                                                      activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
 
                                                   } else {
-                                                      if (!Settings.System.canWrite(main_activity)) {
-                                                          main_activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                      if (!Settings.System.canWrite(activity)) {
+                                                          activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                                                   Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
                                                       }
                                                   }
@@ -343,12 +267,12 @@ public class Token {
 
                                                   Intent intent = new Intent(Intent.ACTION_SEND);
                                                   intent.putExtra(Intent.EXTRA_TEXT, "Más imágenes en: https://goo.gl/GPUoTJ");
-                                                  String path = MediaStore.Images.Media.insertImage(main_activity.getContentResolver(), bitmapImg, "", null);
+                                                  String path = MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmapImg, "", null);
                                                   Uri screenshotUri = Uri.parse(path);
 
                                                   intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                                                   intent.setType("image/*");
-                                                  main_activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
+                                                  activity.startActivity(Intent.createChooser(intent, "Compartir la imagen en:"));
                                               }
                                           }
                                       }
