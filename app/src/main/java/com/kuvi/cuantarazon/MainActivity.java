@@ -17,20 +17,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
-public class MainActivity extends AppCompatActivity implements ScrollViewListener {
+public class MainActivity extends Activity implements ScrollViewListener {
 
     private JSONObject jsonObject;
     private int actualID = 0;
@@ -45,21 +39,10 @@ public class MainActivity extends AppCompatActivity implements ScrollViewListene
     private Long actualTime;
     private Long oldTime;
 
-    public static Tracker mTracker;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        // [END shared_tracker]
-
-        mTracker.setScreenName("MainActiviy");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         oldTime = System.currentTimeMillis()/1000;
 
@@ -85,11 +68,6 @@ public class MainActivity extends AppCompatActivity implements ScrollViewListene
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -107,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements ScrollViewListene
         }
     }
 
-    private void createTokens(JSONArray jsonArray) {
+    private void createTokens(JSONArray jsonArray)
+    {
         int id = 0;
         String title;
         String url = null;
@@ -157,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements ScrollViewListene
 
     }
 
-    private class GetTokensTask extends AsyncTask<ApiConnector, Long, JSONArray> {
+    private class GetTokensTask extends AsyncTask<ApiConnector, Long, JSONArray>
+    {
 
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
