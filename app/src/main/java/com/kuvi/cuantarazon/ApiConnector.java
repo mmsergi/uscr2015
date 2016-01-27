@@ -19,8 +19,14 @@ import java.util.List;
 
 public class ApiConnector {
 
-    public JSONArray GetTokens(int id) {
-        String url_select = "http://mejorandroid.es/uscr/demo.php";
+    public JSONArray GetTokens(int id, boolean favActivity) {
+        String url_select;
+
+        if (favActivity) {
+            url_select = "http://mejorandroid.es/uscr/getfav.php";
+        } else {
+            url_select = "http://mejorandroid.es/uscr/demo.php";
+        }
 
         String number = Integer.toString(id);
 

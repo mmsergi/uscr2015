@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MEMESPORTS"
+        android:text="FAVORITES"
         android:id="@+id/textView"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
@@ -16,23 +16,13 @@
         android:textColor="@color/white"/>
 
     <ImageButton
-        android:id="@+id/update_button"
+        android:id="@+id/home_button"
         android:layout_width="25dp"
-        android:layout_height="25dp"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:scaleType="centerInside"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/update" />
-
-    <ImageButton
-        android:id="@+id/favs_button"
-        android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:scaleType="centerInside"
-        android:background="@drawable/star"
-        android:layout_toLeftOf="@+id/update_button" />
+        android:layout_marginRight="10dp"
+        android:background="@drawable/home" />
 
 </RelativeLayout>
