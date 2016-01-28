@@ -37,14 +37,14 @@ public class FavActivity extends Activity {
 
     private int favID;
     private int lengthArray;
-    private int[] arrayIDs = {4, 4, 3, 1, 2, 4};
+    private int[] arrayIDs;
+    //private int[] arrayIDs = {4, 4, 3, 1, 2, 4};
     private int tokensCreated = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
@@ -55,21 +55,40 @@ public class FavActivity extends Activity {
 
         actionBar.setCustomView(R.layout.actionbar_favs);//set the custom view*/
 
-        lengthArray = arrayIDs.length;
-
-        favID = arrayIDs[0];
-
         ImageButton home_button = (ImageButton) findViewById(R.id.home_button);
         home_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FavActivity.this,MainActivity.class);
+                Intent intent = new Intent(FavActivity.this, MainActivity.class);
                 startActivity(intent);
             }
 
         });
 
-        new GetTokensTask().execute(new ApiConnector());
+
+        //CHECK EXISTS FAVS
+        SharedPreferences prefs = this.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
+        String favs_string = prefs.getString("favorites", null);
+        String[] favArray;
+
+        if (!favs_string.isEmpty()) {
+
+            favArray = favs_string.split(",");
+            arrayIDs = new int[favArray.length];
+            for (int i = 0; i < favArray.length; i++) {
+                arrayIDs[i] = Integer.parseInt(favArray[i]);
+            }
+
+            lengthArray = arrayIDs.length;
+
+            favID = arrayIDs[0];
+
+            new GetTokensTask().execute(new ApiConnector());
+
+        }else{
+            //PONER UNA FOTO DE QUE NO HAY FAVS
+            Log.e("FAV ACTIVITY", "No favs available");
+        }
 
     }
 
@@ -97,7 +116,7 @@ public class FavActivity extends Activity {
 
                 //new Token(this, id, url, points, title);
 
-                token.createToken(id, url, points, title);
+                token.createToken(id, url, points, title,true);
 
 
 

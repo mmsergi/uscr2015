@@ -34,6 +34,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 public class MainActivity extends Activity implements ScrollViewListener {
 
     private JSONObject jsonObject;
@@ -42,7 +44,7 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
     public static int numTokens = 8;
 
-    private SharedPreferences prefs;
+    public SharedPreferences prefs;
 
     Intent starterIntent;
     private boolean firstInit = true;
@@ -127,6 +129,11 @@ public class MainActivity extends Activity implements ScrollViewListener {
 
         int lengthArray = jsonArray.length();
 
+        String[] favArray;
+
+        SharedPreferences prefs = this.getSharedPreferences("com.kuvi.cuantarazon", Context.MODE_PRIVATE);
+        String favs_string = prefs.getString("favorites", "");
+
         for (int i = 0; i < lengthArray; i++){
             jsonObject = null;
 
@@ -138,14 +145,27 @@ public class MainActivity extends Activity implements ScrollViewListener {
                 String title = jsonObject.getString("title");
                 String url = jsonObject.getString("url");
                 int points = jsonObject.getInt("points");
+                boolean fav=false;
+
+                if(!favs_string.isEmpty()){
+                    favArray = favs_string.split(",");
+                    if(Arrays.asList(favArray).contains(String.valueOf(id))){
+                        fav = true;
+                        Log.e("EXIST_FAV",String.valueOf(id) + " - " + title);
+                    }
+                }
+
 
                 actualID = id;
-                Log.e("Actual ID", String.valueOf(id));
-                Log.e("Token", title);
+
+
+
+                //Log.e("Actual ID", String.valueOf(id));
+                //Log.e("Token", title);
 
                 //new Token(this, id, url, points, title);
 
-                token.createToken(id, url, points, title);
+                token.createToken(id, url, points, title, fav);
 
 
                 //createTOKEN(id, url, points, "title");
